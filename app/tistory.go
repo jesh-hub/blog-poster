@@ -9,12 +9,14 @@ import (
 type Tistory struct {
 	BlogName    string
 	AccessToken string
+	HttpClient  *http.Client
 }
 
 func NewTistory(blogName string, token string) *Tistory {
 	return &Tistory{
 		BlogName:    blogName,
 		AccessToken: token,
+		HttpClient:  &http.Client{},
 	}
 }
 
@@ -31,7 +33,7 @@ func (t *Tistory) List() {
 
 	req.URL.RawQuery = q.Encode()
 
-	resp, err := http.Get(req.URL.String())
+	resp, err := t.HttpClient.Do(req)
 	if err != nil {
 		log.Fatal(err)
 	}
